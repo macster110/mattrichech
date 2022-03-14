@@ -75,7 +75,7 @@ for j=200:266 %iterate through different times
 
     subplot(1,3,2)
     [h] = plotsonarimage(sonarimages(1), sonarimages(1).background); 
-    title('Backgeround subtraction')
+    title('Background subtraction')
     caxis([0, 80])
         colormap inferno
     grid off
