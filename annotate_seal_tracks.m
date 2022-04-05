@@ -2,15 +2,36 @@
 % Relevent data are then extracted from file and saved as a MATLAB struct. 
 % Result are saved to the same folder as the gpl file. 
 clear
+clear global
 
 %Input needs to be a file and a list of frames in which the animal is
 %present. 
-gplfile = '/Volumes/JamieBack_1/Tritech/river_sonar_data/20211212_seal/log_2021-12-12-000518.glf';
-frames = 200:257;
+% gplfile = '/Volumes/JamieBack_1/Tritech/river_sonar_data/20211212_seal/log_2021-12-12-000518.glf';
+% frames = 200:257;
+% 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-09-223320.glf';
+% frames = 847:925;
+% 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-09-051731.glf';
+% frames = 879:909;
+% 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-10-200120.glf';
+% frames = 579:754; 
+% 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-11-193123.glf';
+% frames = 461:527;
+% 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-004852.glf';
+% frames = 76:111; 
 
-gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-09-223320.glf';
-frames = 847:925;
+gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-164726.glf';
+frames =  750:782; 
 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-20-121345.glf';
+% frames = 457:532;
+
+% set to true to plot background subtraction
+backgroundsub = true; 
 
 %grab info on the file
 [filepath,name,ext] = fileparts(gplfile);
@@ -59,7 +80,13 @@ for j=frames%iterate through different times
     zoffset = 0; 
     sonarimages(1).image=double(sonarimages(1).image)-zoffset; 
     disp(['Plotting image ' num2str(j) ' of ' num2str(nimages)])
-    [h] = plotsonarimage(sonarimages(1));
+    if (backgroundsub)
+        % plot background subtracted image
+        [h] = plotsonarimage(sonarimages(1), sonarimages(1).background);
+    else
+        % plot the raw image
+        [h] = plotsonarimage(sonarimages(1));
+    end
     caxis([0, 80]-zoffset)
     title('Raw Image')
     colormap default
@@ -71,12 +98,6 @@ for j=frames%iterate through different times
         sealtrack(n,[2 3]) = h.Position;
         n=n+1;
     end
-    %     subplot(1,3,2)
-    %     [h] = plotsonarimage(sonarimages(1), sonarimages(1).background);
-    %     title('Backgeround subtraction')
-    %     caxis([0, 80])
-    %         colormap inferno
-    %     grid off
 
 
     drawnow;
