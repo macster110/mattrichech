@@ -22,5 +22,5 @@ The script _annotate_seal_tracks.m_ can be used to annotate animal tracks. The s
   <img width="400" height="330" src = "seal_track_log_2021-12-12-000518.png">
 </p>
 
-_A manually annoated seal track. This is all the detectins from all frames stacked on top of each other to create one image_
+_A manually annoated seal track. This is all the detections from all frames are stacked on top of each other to create one image_
 
