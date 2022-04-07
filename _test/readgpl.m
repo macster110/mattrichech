@@ -26,7 +26,6 @@ for j=200:266 %iterate through different times
     for i=1:length(sonarList) %iterate through different sonars
 %         cleanData = backgroundSub[i].removeBackground(cleanData, true);
 
-
 	    rawimage(i,1) = mfc.getSonarRecord(sonarList(i), ind);
         arawimage = rawimage(i,1).getImageData; % 1D array of points that make up the image 
 

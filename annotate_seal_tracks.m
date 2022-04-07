@@ -32,6 +32,8 @@ frames =  750:782;
 
 % set to true to plot background subtraction
 backgroundsub = true; 
+%the number of frames to skip when annotating. Set to 1 to view all frames.
+skipframe = 4; 
 
 %grab info on the file
 [filepath,name,ext] = fileparts(gplfile);
@@ -51,9 +53,12 @@ thHigh = 70;
 thLow = 30;
 nConnect = 8;
 
+% keep a record of zoomed limits
+surfxlim=[]; 
+surfylim=[]; 
 %% Mark out a seal track
 n=1;
-for j=frames%iterate through different times
+for j=min(frames):skipframe:max(frames)%iterate through different times
     ind = j-1;
 
 
@@ -83,12 +88,19 @@ for j=frames%iterate through different times
     if (backgroundsub)
         % plot background subtracted image
         [h] = plotsonarimage(sonarimages(1), sonarimages(1).background);
+        title(['Raw Image: frame: ' num2str(j)])
     else
         % plot the raw image
         [h] = plotsonarimage(sonarimages(1));
+        title(['Background subtracted Image: frame: ' num2str(j)])
     end
+
+    if (~isempty(surfxlim))
+        xlim(surfxlim);
+        ylim(surfylim);
+    end
+
     caxis([0, 80]-zoffset)
-    title('Raw Image')
     colormap default
     grid off
 
@@ -99,8 +111,13 @@ for j=frames%iterate through different times
         n=n+1;
     end
 
-
     drawnow;
+
+
+    fig = gca; 
+        % keep a record of the lims
+    surfxlim = fig.XLim; 
+    surfylim = fig.YLim; 
 end
 
 
