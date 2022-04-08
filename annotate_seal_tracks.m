@@ -24,8 +24,8 @@ clear global
 % gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-004852.glf';
 % frames = 76:111; 
 
-gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-164726.glf';
-frames =  750:782; 
+% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-164726.glf';
+% frames =  750:782; 
 
 % gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-20-121345.glf';
 % frames = 457:532;
@@ -121,11 +121,23 @@ for j=min(frames):skipframe:max(frames)%iterate through different times
 end
 
 
+if (skipframe>1)
+    %linear inteprolation of the track.
+    sealtrackxv = interp1(sealtrack(:,1), sealtrack(:,2), frames); 
+    sealtrackyv = interp1(sealtrack(:,1), sealtrack(:,3), frames); 
+    
+    sealtrackinterp = [frames' sealtrackxv' sealtrackyv']; 
+
+else
+    sealtrackinterp = sealtrack; 
+end
+
+
 %% extract the required data from the marked out seal using the sonar data. 
 % % for testing
 % load('2021-12-12-000518_sealtrack.mat')
 % frames = 200:257;
-[sealtrackdat] = annottrack2struct(gplfile, sealtrack); 
+[sealtrackdat] = annottrack2struct(gplfile, sealtrackinterp); 
 
 
 %% Plot the data

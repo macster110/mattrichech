@@ -58,7 +58,7 @@ surfxlim=[];
 surfylim=[]; 
 %% Mark out a seal track
 n=1;
-for j=frames%iterate through different times
+for j=min(frames):skipframe:max(frames)%iterate through different times
     ind = j-1;
 
 
@@ -88,9 +88,11 @@ for j=frames%iterate through different times
     if (backgroundsub)
         % plot background subtracted image
         [h] = plotsonarimage(sonarimages(1), sonarimages(1).background);
+        title(['Raw Image: frame: ' num2str(j)])
     else
         % plot the raw image
         [h] = plotsonarimage(sonarimages(1));
+        title(['Background subtracted Image: frame: ' num2str(j)])
     end
 
     if (~isempty(surfxlim))
@@ -99,7 +101,6 @@ for j=frames%iterate through different times
     end
 
     caxis([0, 80]-zoffset)
-    title('Raw Image')
     colormap default
     grid off
 
@@ -120,11 +121,23 @@ for j=frames%iterate through different times
 end
 
 
+if (skipframe>1)
+    %linear inteprolation of the track.
+    sealtrackxv = interp1(sealtrack(:,1), sealtrack(:,2), frames); 
+    sealtrackyv = interp1(sealtrack(:,1), sealtrack(:,3), frames); 
+    
+    sealtrackinterp = []; 
+
+else
+    sealtrackinterp = sealtrack; 
+end
+
+
 %% extract the required data from the marked out seal using the sonar data. 
 % % for testing
 % load('2021-12-12-000518_sealtrack.mat')
 % frames = 200:257;
-[sealtrackdat] = annottrack2struct(gplfile, sealtrack); 
+[sealtrackdat] = annottrack2struct(gplfile, sealtrackinterp); 
 
 
 %% Plot the data
