@@ -24,8 +24,8 @@ clear global
 % gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-004852.glf';
 % frames = 76:111; 
 
-% gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-164726.glf';
-% frames =  750:782; 
+gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-19-164726.glf';
+frames =  750:782; 
 
 % gplfile = '/Volumes/JamieBack_1/Tritech/seal_examples/Genesis/log_2021-12-20-121345.glf';
 % frames = 457:532;
@@ -158,6 +158,6 @@ c.Label.FontSize = 14;
 set(gca, 'FontSize', 14)
 caxis([0, 80])
 
-%%save the data
-save(fullfile(filepath, ['seal_track_', name '.mat']), 'sealtrackdat'); 
-saveas(gcf, fullfile(filepath, ['seal_track_' name '.png'])); 
+% %%save the data
+% save(fullfile(filepath, ['seal_track_', name '.mat']), 'sealtrackdat'); 
+% saveas(gcf, fullfile(filepath, ['seal_track_' name '.png'])); 
