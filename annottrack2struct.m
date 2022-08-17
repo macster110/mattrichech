@@ -33,6 +33,8 @@ sealradius = 1; %seal signal radius in meters
 noiseradius = 3; %seal noise radius in meters
 rectsize = 2.5;% size of the image for deep learning in meters
 
+dd = dir(gplfile);
+
 [mfc, regionDetector, rawimage] = sonardataj(gplfile);
 sonarList = mfc.getSonarIDs();
 [~,name,ext] = fileparts(gplfile); 
@@ -47,8 +49,14 @@ for j=1:length(targettrack(:,1)) %iterate through different times
 
     for i=1:length(sonarList) %iterate through different sonars
 
-        rawimage(i,1) = mfc.getSonarRecord(sonarList(i), targettrack(j,1));
-        arawimage = rawimage(i,1).getImageData; % 1D array of points that make up the image
+        % I think the matlab frames are 1 indexed. the Java call
+        % getSonarRecord needs 0 indexed. The correct indexing is used in
+        % the annotate_seal_tracks function at line 62 where the index is
+        % the frame number - 1. 
+        rawimage(i,1) = mfc.getSonarRecord(sonarList(i), targettrack(j,1)-1);
+        arawimage = int16(rawimage(i,1).getImageData); % 1D array of points that make up the image
+        neg = find(arawimage < 0);
+        arawimage(neg) = arawimage(neg) + 256;
 
         sonarimages(i).image = reshape(arawimage, [], rawimage(i,1).getnRange);
         sonarimages(i).maxrange = rawimage(i,1).getMaxRange;
@@ -62,10 +70,10 @@ for j=1:length(targettrack(:,1)) %iterate through different times
             num2str(  sonarimages(i).nbeam)  '  '   num2str(sonarimages(i).nrange)])
 
         %run background subtractions and save the image
-        [sonarimages(i).background, denoisearr] = removenoise(rawimage(i,1), i);
+%         [sonarimages(i).background, denoisearr] = removenoise(rawimage(i,1), i);
 
         %run the detector and save the image
-        detectedregions = regionDetector.detectRegions(rawimage(i,1) , denoisearr, 70, 30, 8);
+%         detectedregions = regionDetector.detectRegions(rawimage(i,1) , denoisearr, 70, 30, 8);
 
         %save a region of seal data. Let's save a circle around the seal.
 
@@ -152,6 +160,8 @@ for j=1:length(targettrack(:,1)) %iterate through different times
             sealheader(i).frames = [name,ext];
             sealheader(i).maxrange = sonarimages(i).maxrange;
         end
+        
+        rawimage(i,1).freeImageData();
 
     end
 
